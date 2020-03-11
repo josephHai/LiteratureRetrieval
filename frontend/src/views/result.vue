@@ -25,7 +25,7 @@ export default {
     };
   },
   created() {
-    this.inputText = this.$route.query.inputText;
+    this.inputText = this.$route.query.text;
   },
   methods: {
     change(data) {
