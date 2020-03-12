@@ -13,7 +13,9 @@ import {
   Col,
   Row,
   Tooltip,
-  Dialog
+  Dialog,
+  Pagination,
+  Divider,
 } from "element-ui";
 
 Vue.config.productionTip = false;
@@ -27,6 +29,8 @@ Vue.use(Col);
 Vue.use(Row);
 Vue.use(Tooltip);
 Vue.use(Dialog);
+Vue.use(Pagination);
+Vue.use(Divider);
 
 new Vue({
   router,

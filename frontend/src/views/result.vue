@@ -1,26 +1,32 @@
 <template>
-  <el-container>
-    <el-header>
-      <el-row type="flex" justify="center">
-        <el-col :span="12">
-          <Retrieval :value="inputText" @inputChange="change($event)" />
-        </el-col>
-      </el-row>
-    </el-header>
-    <el-container>
-      <el-aside width="200">Aside</el-aside>
-      <el-main>Main</el-main>
-    </el-container>
-  </el-container>
+  <div>
+    <el-row>
+      <el-col :span="12" :offset="4">
+        <Retrieval :value="inputText" @inputChange="change($event)" />
+      </el-col>
+    </el-row>
+    <el-row style="margin-top: 30px;">
+      <el-col :span="12" :offset="4">
+        <MainList />
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="100"
+        ></el-pagination>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
 import Retrieval from "../components/Retrieval";
+import MainList from "../components/MainList";
 
 export default {
   name: "Result",
   data() {
     return {
+      // the text in search box
       inputText: ""
     };
   },
@@ -32,6 +38,6 @@ export default {
       this.inputText = data;
     }
   },
-  components: { Retrieval }
+  components: { Retrieval, MainList }
 };
 </script>
