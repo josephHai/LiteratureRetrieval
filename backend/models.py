@@ -2,19 +2,19 @@ from django.db import models
 import json
 import re
 
-# Create your models here.
-
 
 # literature model
-class LiteratureItem():
+class Literature(models.Model):
+    id = models.IntegerField(primary_key=True)
+    link = models.CharField(max_length=200)
+    title = models.TextField()
+    authors = models.TextField()
+    brief = models.TextField()
+    source_name = models.CharField(max_length=100)
+    source_link = models.CharField(max_length=100)
 
-    def __init__(self):
-        self.link = ''
-        self.title = ''
-        self.authors = ''
-        self.brief = ''
-        self.source_name = []
-        self.source_link = []
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.pattern = r'\r|\t|\n'
 
     def to_dict(self):
@@ -31,30 +31,28 @@ class LiteratureItem():
         return self.title == other.title
 
 
-class LiteratureList(list):
+class LiteratureMap(dict):
     def __init__(self):
         super().__init__()
-        self.type = LiteratureItem
+        self.type = Literature
 
     def append(self, item):
-        if not isinstance(item, self.type):
-            raise TypeError('item is not of type %s' % self.type)
         # check whether there is a duplicate item
         # if not, add current item to the list
         # else, just update the duplicate item's source info
-        if item not in self:
-            super(LiteratureList, self).append(item)
+        if not isinstance(item, self.type):
+            raise TypeError('item is not of type %s' % self.type)
+        if self.get(item.title):
+            tmp = self[item.title]
+            tmp.source_name += '|' + item.source_name
+            tmp.source_link += '|' + item.source_link
+            self[item.title] = tmp
         else:
-            i = self.index(item)
-            tmp = self[i]
-            tmp.source_name.append(''.join(item.source_name))
-            tmp.source_link.append(''.join(item.source_link))
-            self[i] = tmp
+            self[item.title] = item
 
-    # convert obj to json
     def to_json(self):
         self_list = []
-        for item in self:
+        for item in self.values():
             self_list.append(item.to_dict())
         return json.dumps(self_list, ensure_ascii=False)
 
