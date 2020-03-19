@@ -23,7 +23,7 @@ class Literature(models.Model):
             'title': re.sub(self.pattern, '', self.title),
             'authors': re.sub(self.pattern, '', self.authors),
             'brief': self.brief.replace(self.pattern, ''),
-            'sources': {'name': self.source_name, 'link': self.source_link}
+            'sources': [{'name': n, 'link': l} for n, l in zip(self.source_name.split('|'), self.source_link.split('|'))]
         }
         return self_dict
 
