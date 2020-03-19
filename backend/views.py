@@ -1,12 +1,13 @@
 from django.http import HttpResponse
 from backend.crawler import Crawler
-from backend.models import Literature
+import json
 
 # Create your views here.
 
 
 def search(request):
     text = request.GET['text']
-    res = Crawler(text, 1).run()
+    res, num = Crawler(text, 1).run()
     # Literature.objects.bulk_create(res.values())
-    return HttpResponse(res.to_json())
+    response = json.dumps({'total': num, 'data': res.to_list()}, ensure_ascii=False)
+    return HttpResponse(response)

@@ -50,11 +50,11 @@ class LiteratureMap(dict):
         else:
             self[item.title] = item
 
-    def to_json(self):
+    def to_list(self):
         self_list = []
         for item in self.values():
             self_list.append(item.to_dict())
-        return json.dumps(self_list, ensure_ascii=False)
+        return self_list
 
 
 if __name__ == '__main__':

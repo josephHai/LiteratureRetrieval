@@ -3,6 +3,7 @@ from lxml import etree
 from enum import Enum
 from backend.models import *
 import time
+import re
 
 
 def response(url, params):
@@ -17,6 +18,7 @@ class Crawler:
         self.page = page
         self.page_size = 10
         self.literature_map = LiteratureMap()
+        self.total_num = 0
 
     def worker(self, source):
         switch = {
@@ -75,6 +77,8 @@ class Crawler:
         
         html = response(url, params)
         results = html.xpath('//div[@class="sc_content"]')
+        total_num = html.xpath('//div[@id="toolbar"]//span[@class="nums"]/text()')
+        self.total_num = ''.join(re.findall(r'\d', total_num[0]))
 
         for literature in results:
             item = Literature()
@@ -91,7 +95,7 @@ class Crawler:
     def run(self):
         self.worker(self.SourceType.BD)
 
-        return self.literature_map
+        return self.literature_map, self.total_num
 
     # search source
     class SourceType(Enum):
