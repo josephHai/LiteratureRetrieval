@@ -85,7 +85,7 @@ class Crawler:
 
             item.title = ''.join(literature.xpath('.//h3[contains(@class, "c_font")]/a//text()'))
             item.link = literature.xpath('.//h3[contains(@class, "c_font")]/a/@href')[0]
-            item.brief = ''.join(literature.xpath('.//div[@class="c_abstract"]/text()'))
+            item.brief = ''.join(literature.xpath('.//div[@class="c_abstract"]//text()'))
             item.authors = ' '.join(literature.xpath('.//div[@class="sc_info"]/span[1]/a/text()'))
             item.source_name = '|'.join(literature.xpath('.//span[@class="v_item_span"]/a/@title'))
             item.source_link = '|'.join(literature.xpath('.//span[@class="v_item_span"]/a/@href'))

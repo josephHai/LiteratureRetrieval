@@ -3,6 +3,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "./plugins/element.js";
+import vueAxios from "vue-axios";
+import axios from "axios";
 import {
   Button,
   Input,
@@ -15,7 +17,7 @@ import {
   Tooltip,
   Dialog,
   Pagination,
-  Divider,
+  Divider
 } from "element-ui";
 
 Vue.config.productionTip = false;
@@ -31,6 +33,8 @@ Vue.use(Tooltip);
 Vue.use(Dialog);
 Vue.use(Pagination);
 Vue.use(Divider);
+
+Vue.use(vueAxios, axios);
 
 new Vue({
   router,
