@@ -25,7 +25,7 @@ SECRET_KEY = '0e3n=(_t*eb)f!1z%qi2#gw!-wtx$_4e4%5iuvkz3_1%@#6f=$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'LiteratureRetrieval.urls'
@@ -130,5 +130,7 @@ STATICFILES_DIRS = [
 ]
 
 ASGI_APPLICATION = 'LiteratureRetrieval.routing.application'
+
+WEBSOCKET_ACCEPT_ALL = True
 
 CORS_ORIGIN_ALLOW_ALL = True
