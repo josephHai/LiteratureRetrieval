@@ -19,7 +19,23 @@
       </el-col>
     </el-row>
     <el-dialog :fullscreen="true" :visible.sync="speechDialog">
-      <span>这是语音信息</span>
+      <el-row
+        type="flex"
+        justify="center"
+        align="middle"
+        style="margin-top: 250px;"
+      >
+        <el-col :span="4">
+          <span class="content">{{ speechText }}</span>
+        </el-col>
+        <el-col :span="4">
+          <el-button class="microphone-btn" circle>
+            <div class="icon-warp">
+              <i class="el-icon-microphone" @click="speechDialog = false"></i>
+            </div>
+          </el-button>
+        </el-col>
+      </el-row>
     </el-dialog>
   </div>
 </template>
@@ -40,7 +56,7 @@ export default {
       websocket: null,
       inputText: this.$props.value,
       speechDialog: false,
-      speechText: "这里是语音信息"
+      speechText: "请输入语音"
     };
   },
   methods: {
@@ -50,7 +66,7 @@ export default {
     },
     initWebSocket() {
       // 初始化websocket
-      const wsUri = "ws://127.0.0.1:8000/ws/speech/";
+      const wsUri = "ws://192.168.1.114:8000/ws/speech/";
       this.websocket = new WebSocket(wsUri);
       this.websocket.onmessage = this.websocketOnMessage;
       this.websocket.onopen = this.websocketOnOpen;
@@ -59,7 +75,7 @@ export default {
     },
     websocketOnOpen() {
       // 连接建立之后执行send方法发送数据
-      let actions = { message: "12345" };
+      let actions = { message: "start" };
       this.websocketSend(JSON.stringify(actions));
     },
     websocketOnError() {
@@ -69,7 +85,7 @@ export default {
     websocketOnMessage(e) {
       // 数据接收
       const response = JSON.parse(e.data).message;
-      this.inputText = response;
+      this.speechText = response;
       this.websocket.close();
       this.$emit("inputChange", response);
     },
@@ -84,3 +100,18 @@ export default {
   }
 };
 </script>
+
+<style>
+.microphone-btn {
+  width: 150px;
+  height: 150px;
+}
+.icon-warp {
+  font-size: 70px;
+  color: red;
+}
+.content {
+  font-size: 1.5rem;
+  color: gray;
+}
+</style>

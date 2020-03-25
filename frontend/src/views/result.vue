@@ -34,7 +34,7 @@ export default {
     };
   },
   created() {
-    this.inputText = this.$route.query.text;
+    this.inputText = this.$route.query.kw;
     this.queryResults();
   },
   methods: {
@@ -44,8 +44,8 @@ export default {
     queryResults() {
       let _this = this;
       this.axios
-        .get("http://127.0.0.1:8000/", {
-          params: { text: this.inputText }
+        .get("http://192.168.1.114:8000/search", {
+          params: { kw: this.inputText }
         })
         .then(function(res) {
           let resObj = Qs.parse(res)["data"];

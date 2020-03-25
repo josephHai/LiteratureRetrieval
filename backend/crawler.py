@@ -39,6 +39,7 @@ class Crawler:
         }
         html = response(url, params)
         results = html.xpath('//div[@class="ResultBlock"]//div[@class="ResultCont"]')
+        self.total_num = html.xpath('//div[@class="BatchOper_result_show"]/span/text()')
 
         for literature in results:
             item = Literature()
@@ -76,6 +77,8 @@ class Crawler:
         }
         
         html = response(url, params)
+        ht = requests.get(url, params)
+        t, u = ht.text, ht.url
         results = html.xpath('//div[@class="sc_content"]')
         total_num = html.xpath('//div[@id="toolbar"]//span[@class="nums"]/text()')
         self.total_num = ''.join(re.findall(r'\d', total_num[0]))

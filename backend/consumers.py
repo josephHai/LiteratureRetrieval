@@ -1,5 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+from backend.recognition import Recognition
 
 
 class SpeechConsumer(AsyncWebsocketConsumer):
@@ -10,9 +11,9 @@ class SpeechConsumer(AsyncWebsocketConsumer):
         pass
 
     async def receive(self, text_data=None, bytes_data=None):
-        text_data_json = json.loads(text_data)
-        message = '测试' + text_data_json['message']
+        recognition = Recognition()
+        text = recognition.run()
 
         await self.send(text_data=json.dumps({
-            'message': message
+            'message': text
         }))

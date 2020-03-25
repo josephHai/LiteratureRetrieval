@@ -28,7 +28,7 @@ export default {
       this.$router.push({
         path: "/result",
         query: {
-          inputText: this.inputText
+          kw: this.inputText
         }
       });
     }
