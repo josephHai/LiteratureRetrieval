@@ -15,19 +15,31 @@ class Recognition():
         self.APP_ID = 'wBQ721zREoj9NioqDjou0krf'
         self.APP_SECRET = 'sMv0LQ8HC9eIBzcmD3SxhaiVgx3CKdrs'
         self.file_name = os.getcwd() + "/backend/audio/" + str(int(time.time())) + ".wav"
+        self.token_file = 'backend/access_token.json'
+        self.now = int(time.time())
 
     def get_token(self):
-        logging.info('开始获取token...')
+        print(os.getcwd())
+        with open(self.token_file, 'r') as f:
+            data = json.load(f)
+        if data['expires_in'] < self.now:
+            logging.info('开始获取token...')
 
-        params = {'grant_type': 'client_credentials',
-                  'client_id': self.APP_ID,
-                  'client_secret': self.APP_SECRET}
-        post_data = urlencode(params)
+            params = {'grant_type': 'client_credentials',
+                      'client_id': self.APP_ID,
+                      'client_secret': self.APP_SECRET}
+            post_data = urlencode(params)
+            url = 'http://openapi.baidu.com/oauth/2.0/token'
+            res = requests.post(url, post_data)
 
-        url = 'http://openapi.baidu.com/oauth/2.0/token'
-
-        res = requests.post(url, post_data)
-        token = json.loads(res.text)["access_token"]
+            token = json.loads(res.text)['access_token']
+            expires_in = json.loads(res.text)['expires_in']
+            data['token'] = token
+            data['expires_in'] = self.now + expires_in
+            with open(self.token_file, 'w') as f:
+                f.write(json.dumps(data, indent=4))
+        else:
+            token = data['token']
         return token
 
     def audio(self):
