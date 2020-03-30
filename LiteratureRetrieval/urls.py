@@ -20,6 +20,7 @@ from backend.views import search
 
 urlpatterns = [
     url('admin/', admin.site.urls),
-    # url(r'^$', TemplateView.as_view(template_name="index.html")),
-    url(r'^search', search)
+    url(r'^$', TemplateView.as_view(template_name="index.html")),
+    url(r'^search', search),
+    url(r'^result', TemplateView.as_view(template_name="index.html"))
 ]
