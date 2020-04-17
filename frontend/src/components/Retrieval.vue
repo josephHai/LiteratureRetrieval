@@ -61,7 +61,6 @@ export default {
   },
   methods: {
     speechCapture() {
-      this.speechDialog = true;
       this.initWebSocket();
     },
     initWebSocket() {
@@ -85,9 +84,15 @@ export default {
     websocketOnMessage(e) {
       // 数据接收
       const response = JSON.parse(e.data).message;
+      const status = JSON.parse(e.data).status;
       this.speechText = response;
-      this.websocket.close();
-      this.$emit("inputChange", response);
+      console.log(status === 0);
+      if (status === 2) {
+        this.websocket.close();
+        this.$emit("inputChange", response);
+      } else if (status === 0) {
+        this.speechDialog = true;
+      }
     },
     websocketSend(Data) {
       // 数据发送
