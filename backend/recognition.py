@@ -177,7 +177,7 @@ class RecognitionWebsocket(WebSocketClient):
                     stop_flag += 1
                 else:
                     stop_flag2 += 1
-                one_second = int(RATE / CHUNK) * 3
+                one_second = int(RATE / CHUNK) * 1.5
                 if stop_flag2 + stop_flag > one_second:
                     if stop_flag2 > one_second:
                         status = STATUS_LAST_FRAME

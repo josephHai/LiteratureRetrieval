@@ -44,7 +44,7 @@ export default {
     queryResults() {
       let _this = this;
       this.axios
-        .get("http://192.168.1.114:8000/search", {
+        .get("http://192.168.1.6:8000/search", {
           params: { kw: this.inputText }
         })
         .then(function(res) {

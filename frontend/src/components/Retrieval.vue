@@ -65,7 +65,7 @@ export default {
     },
     initWebSocket() {
       // 初始化websocket
-      const wsUri = "ws://192.168.1.114:8000/ws/speech/";
+      const wsUri = "ws://192.168.1.6:8000/ws/speech/";
       this.websocket = new WebSocket(wsUri);
       this.websocket.onmessage = this.websocketOnMessage;
       this.websocket.onopen = this.websocketOnOpen;

@@ -19,12 +19,15 @@ RESOURCE_FILE = os.path.join(TOP_DIR, "resources/common.res")
 DETECT_DING = os.path.join(TOP_DIR, "resources/ding.wav")
 DETECT_DONG = os.path.join(TOP_DIR, "resources/dong.wav")
 
+
 def py_error_handler(filename, line, function, err, fmt):
     pass
+
 
 ERROR_HANDLER_FUNC = CFUNCTYPE(None, c_char_p, c_int, c_char_p, c_int, c_char_p)
 
 c_error_handler = ERROR_HANDLER_FUNC(py_error_handler)
+
 
 @contextmanager
 def no_alsa_error():
@@ -36,6 +39,7 @@ def no_alsa_error():
     except:
         yield
         pass
+
 
 class RingBuffer(object):
     """Ring buffer to hold audio from PortAudio"""
@@ -77,7 +81,7 @@ def play_audio_file(fname=DETECT_DING):
     audio.terminate()
 
 
-class HotwordDetector(object):
+class HotWordDetector(object):
     """
     Snowboy decoder to detect whether a keyword specified by `decoder_model`
     exists in a microphone input stream.
@@ -94,10 +98,12 @@ class HotwordDetector(object):
 
     def __init__(self, decoder_model,
                  resource=RESOURCE_FILE,
-                 sensitivity=[],
+                 sensitivity=None,
                  audio_gain=1,
                  apply_frontend=False):
 
+        if sensitivity is None:
+            sensitivity = []
         tm = type(decoder_model)
         ts = type(sensitivity)
         if tm is not list:
@@ -205,18 +211,18 @@ class HotwordDetector(object):
             if status == -1:
                 logger.warning("Error initializing streams or reading audio data")
 
-            #small state machine to handle recording of phrase after keyword
+            # small state machine to handle recording of phrase after keyword
             if state == "PASSIVE":
-                if status > 0: #key word found
+                if status > 0:  # key word found
                     self.recordedData = []
                     self.recordedData.append(data)
                     silentCount = 0
                     recordingCount = 0
                     message = "Keyword " + str(status) + " detected at time: "
                     message += time.strftime("%Y-%m-%d %H:%M:%S",
-                                         time.localtime(time.time()))
+                                             time.localtime(time.time()))
                     logger.info(message)
-                    callback = detected_callback[status-1]
+                    callback = detected_callback[status - 1]
                     if callback is not None:
                         callback()
 
@@ -228,16 +234,16 @@ class HotwordDetector(object):
                 stopRecording = False
                 if recordingCount > recording_timeout:
                     stopRecording = True
-                elif status == -2: #silence found
+                elif status == -2:  # silence found
                     if silentCount > silent_count_threshold:
                         stopRecording = True
                     else:
                         silentCount = silentCount + 1
-                elif status == 0: #voice found
+                elif status == 0:  # voice found
                     silentCount = 0
 
-                if stopRecording == True:
-                    fname = self.saveMessage()
+                if stopRecording:
+                    fname = self.save_message()
                     audio_recorder_callback(fname)
                     state = "PASSIVE"
                     continue
@@ -247,14 +253,14 @@ class HotwordDetector(object):
 
         logger.debug("finished.")
 
-    def saveMessage(self):
+    def save_message(self):
         """
         Save the message stored in self.recordedData to a timestamped file.
         """
         filename = 'output' + str(int(time.time())) + '.wav'
         data = b''.join(self.recordedData)
 
-        #use wave to save data
+        # use wave to save data
         wf = wave.open(filename, 'wb')
         wf.setnchannels(1)
         wf.setsampwidth(self.audio.get_sample_size(
