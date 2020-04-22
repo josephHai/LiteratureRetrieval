@@ -1,7 +1,7 @@
 pyhanlp==0.1.63
 requests==2.23.0
 channels==2.4.0
-Django==3.0.2
+Django==3.0.3
 lxml==4.5.0
 pyaudio==0.2.11
 
