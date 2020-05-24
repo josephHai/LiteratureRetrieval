@@ -1,0 +1,65 @@
+{
+ "spider": "literature",
+ "name": "wf",
+ "website": "万方",
+ "type": "文献",
+ "index": "http://www.wanfangdata.com.cn",
+ "settings": {},
+ "start_urls": {
+  "type": "dynamic",
+  "method": "wf",
+  "args": [
+   "word2vec"
+  ]
+ },
+ "allowed_domains": [
+  "www.wanfangdata.com.cn"
+ ],
+ "rules": "wf",
+ "item": {
+  "class": "LiteratureItem",
+  "loader": "WfLoader",
+  "attrs": {
+   "title": [
+    {
+     "method": "xpath",
+     "args": [
+      "//div[@class=\"ResultCont\"]//div[@class=\"title\"]/a[1]//text()"
+     ]
+    }
+   ],
+   "authors": [
+    {
+     "method": "xpath",
+     "args": [
+      "//div[@class=\"ResultCont\"]//div[@class=\"author\"]//a//text()"
+     ]
+    }
+   ],
+   "brief": [
+    {
+     "method": "xpath",
+     "args": [
+      "//div[@class=\"ResultCont\"]//div[@class=\"summary\"]//text()"
+     ]
+    }
+   ],
+   "source": [
+    {
+     "method": "xpath",
+     "args": [
+      "//div[@class=\"ResultCont\"]//div[@class=\"title\"]/a[1]/@href"
+     ]
+    }
+   ],
+   "website": [
+    {
+     "method": "value",
+     "args": [
+      "万方"
+     ]
+    }
+   ]
+  }
+ }
+}

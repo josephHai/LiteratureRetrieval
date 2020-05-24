@@ -1,0 +1,19 @@
+{
+ "spider": "literature",
+ "name": "ixs",
+ "website": "爱学术",
+ "type": "文献",
+ "index": "https://www.ixueshu.com/",
+ "settings": {},
+ "start_urls": {
+  "type": "dynamic",
+  "method": "ixs",
+  "args": [
+   "word2vec"
+  ]
+ },
+ "allowed_domains": [
+  "www.ixueshu.com/"
+ ],
+ "rules": "ixs"
+}
