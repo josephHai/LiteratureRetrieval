@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 
 
 def wf(keywords):
-    for page in range(20):
+    for page in range(1, 5):
         params = {
             'beetlansyId': 'aysnsearch',
             'searchType': 'all',
@@ -21,7 +21,7 @@ def wf(keywords):
 
 
 def ixs(keywords):
-    for page in range(20):
+    for page in range(1, 5):
         params = {
             'search_type': '',
             'q': keywords,

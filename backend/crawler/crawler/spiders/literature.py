@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
-
 from scrapy.spiders import CrawlSpider
-from scrapy import Selector, FormRequest, Request
+from scrapy import FormRequest, Request
 
 from ..utils import get_config
 from ..rules import rules

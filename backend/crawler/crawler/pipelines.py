@@ -6,7 +6,8 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import pymysql
 import logging
-from scrapy.utils.project import get_project_settings
+
+from django.conf import settings
 
 
 class CrawlerPipeline(object):
@@ -16,12 +17,11 @@ class CrawlerPipeline(object):
 
 class MySqlPipeline(object):
     def __init__(self):
-        settings = get_project_settings()
         self.connect = pymysql.connect(
-            host=settings.get('HOST'),
-            user=settings.get('USER'),
-            passwd=settings.get('PASSWORD'),
-            db=settings.get('DB_NAME')
+            host=settings.HOST,
+            user=settings.USER,
+            passwd=settings.PASSWORD,
+            db=settings.DB_NAME
         )
         self.cursor = self.connect.cursor()
 
