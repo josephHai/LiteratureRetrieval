@@ -116,18 +116,11 @@ AUTOTHROTTLE_DEBUG = False
 # log configuration
 to_day = datetime.datetime.now()
 
-# LOG_LEVEL = 'INFO'
-# LOG_FILE = 'log/{}_{}_{}.log'.format(to_day.year, to_day.month, to_day.day)
-
-# MySQL configuration
-HOST = '127.0.0.1'
-PORT = 3306
-USER = 'root'
-PASSWORD = 'DRsXT5ZJ6Oi55LPQ'
-DB_NAME = 'literature'
+LOG_LEVEL = 'INFO'
+LOG_FILE = 'log/{}_{}_{}.log'.format(to_day.year, to_day.month, to_day.day)
 
 # Crawler strategy
 MAX_ITEM_NUM = 700  # 最大爬取数量
 RETRY_ENABLED = False  # 禁止重试
-DOWNLOAD_TIMEOUT = 3  # 下载超时
+DOWNLOAD_TIMEOUT = 15  # 下载超时
 HTTPERROR_ALLOWED_CODES = [403]

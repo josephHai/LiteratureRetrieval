@@ -1,14 +1,16 @@
-from django.http import HttpResponse
-from backend.crawler import Crawler
 import json
 
+from django.http import HttpResponse
 
-# Create your views here.
+from .crawler.run import Worker
 
 
 def search(request):
-    text = request.GET['kw']
-    res, num = Crawler(text, 1).run()
+    keywords = request.GET.get('kw', '')
+    page = request.GET.get('page', 1)
+    # res, num = Crawler(keywords, page).run()
     # Literature.objects.bulk_create(res.values())
-    response = json.dumps({'total': num, 'data': res.to_list()}, ensure_ascii=False)
+    worker = Worker(keywords)
+
+    response = json.dumps({'code': 200, 'data': {'total': 0, 'items': worker.get_data(int(page), 10)}}, ensure_ascii=False)
     return HttpResponse(response)
