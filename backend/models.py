@@ -1,61 +1,34 @@
 from django.db import models
-import json
-import re
 
 
-# literature model
-class Literature(models.Model):
-    id = models.IntegerField(primary_key=True)
-    link = models.CharField(max_length=200)
-    title = models.TextField()
-    authors = models.TextField()
-    brief = models.TextField()
-    source_name = models.CharField(max_length=100)
-    source_link = models.CharField(max_length=100)
+class Content(models.Model):
+    title = models.CharField('标题', max_length=100, unique=True)
+    authors = models.TextField('作者')
+    brief = models.TextField('摘要')
+    source = models.TextField('来源地址')
+    website = models.TextField('来源网站')
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.pattern = r'\r|\t|\n'
+    class Meta:
+        verbose_name = u"文献内容"
+        verbose_name_plural = verbose_name
 
-    def to_dict(self):
-        self_dict = {
-            'link': re.sub(self.pattern, '', self.link),
-            'title': re.sub(self.pattern, '', self.title),
-            'authors': re.sub(self.pattern, '', self.authors),
-            'brief': self.brief.replace(self.pattern, ''),
-            'sources': [{'name': n, 'link': l} for n, l in zip(self.source_name.split('|'), self.source_link.split('|'))]
-        }
-        return self_dict
-
-    def __eq__(self, other):
-        return self.title == other.title
+    def __str__(self):
+        return 'Content<id=%s,name=%s>' % (
+            self.id, self.title
+        )
 
 
-class LiteratureMap(dict):
-    def __init__(self):
-        super().__init__()
-        self.type = Literature
+class Source(models.Model):
+    short_name = models.CharField('网站简称', max_length=10)
+    name = models.CharField('网站名称', max_length=50)
+    url = models.CharField('网站地址', max_length=50)
+    img_url = models.CharField('网站图标地址', max_length=50, default='http://s.c/static/img/source/default.jpg')
 
-    def append(self, item):
-        # check whether there is a duplicate item
-        # if not, add current item to the list
-        # else, just update the duplicate item's source info
-        if not isinstance(item, self.type):
-            raise TypeError('item is not of type %s' % self.type)
-        if self.get(item.title):
-            tmp = self[item.title]
-            tmp.source_name += '|' + item.source_name
-            tmp.source_link += '|' + item.source_link
-            self[item.title] = tmp
-        else:
-            self[item.title] = item
+    class Meta:
+        verbose_name = u"来源"
+        verbose_name_plural = verbose_name
 
-    def to_list(self):
-        self_list = []
-        for item in self.values():
-            self_list.append(item.to_dict())
-        return self_list
-
-
-if __name__ == '__main__':
-    pass
+    def __str__(self):
+        return 'Source<id=%s,name=%s>' % (
+            self.id, self.name
+        )

@@ -9,7 +9,7 @@
   "type": "dynamic",
   "method": "wf",
   "args": [
-   "word2vec"
+   ""
   ]
  },
  "allowed_domains": [
@@ -19,12 +19,13 @@
  "item": {
   "class": "LiteratureItem",
   "loader": "WfLoader",
+  "box_path": "//div[@class=\"ResultBlock\"]//div[@class=\"ResultCont\"]",
   "attrs": {
    "title": [
     {
      "method": "xpath",
      "args": [
-      "//div[@class=\"ResultCont\"]//div[@class=\"title\"]/a[1]//text()"
+      ".//div[@class=\"title\"]/a[1]//text()"
      ]
     }
    ],
@@ -32,7 +33,7 @@
     {
      "method": "xpath",
      "args": [
-      "//div[@class=\"ResultCont\"]//div[@class=\"author\"]//a//text()"
+      ".//div[@class=\"author\"]/a/text()"
      ]
     }
    ],
@@ -40,7 +41,7 @@
     {
      "method": "xpath",
      "args": [
-      "//div[@class=\"ResultCont\"]//div[@class=\"summary\"]//text()"
+      ".//div[@class=\"summary\"]//text()"
      ]
     }
    ],
@@ -48,7 +49,7 @@
     {
      "method": "xpath",
      "args": [
-      "//div[@class=\"ResultCont\"]//div[@class=\"title\"]/a[1]/@href"
+      ".//div[@class=\"title\"]/a[1]/@href"
      ]
     }
    ],

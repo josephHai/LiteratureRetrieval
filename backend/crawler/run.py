@@ -1,21 +1,20 @@
 import os
 import time
 
-import pymysql
-
 from scrapy.utils.project import get_project_settings
 from scrapy.crawler import CrawlerProcess
-from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from celery import shared_task
 
 from backend.crawler.crawler.utils import get_config, update_config
+from ..models import Content
 
 
 @shared_task()
-def run(kw):
+def run(kw, source):
     os.chdir('/home/respeaker/LiteratureRetrieval/backend/crawler')
 
-    names = ['wf', 'ixs']
+    names = source
     project_settings = get_project_settings()
     process = CrawlerProcess(project_settings)
 
@@ -30,51 +29,59 @@ def run(kw):
     process.start(stop_after_crawl=False)
 
 
-class Worker():
-    def __init__(self, kw):
-        self.conn = pymysql.connect(
-            host=settings.HOST,
-            user=settings.USER,
-            passwd=settings.PASSWORD,
-            db=settings.DB_NAME
-        )
-        self.cursor = self.conn.cursor()
+class Worker:
+    def __init__(self, kw, source):
         self.kw = kw
+        self.source = source
 
     def get_data(self, page_num, page_size):
+        print('判断是否为第一次请求')
         if self.is_first_request():
-            # 启动爬虫
-            run.delay(self.kw)
+            Content.objects.all().delete()
 
+            print('启动爬虫')
+            now = time.time()
+            # 启动爬虫
+            spider = run.delay(self.kw, self.source)
+
+            print('启动完成,用时{}'.format(time.time()-now))
             i = 0
-            while self.has_data() == 0:
-                print('wait')
-                time.sleep(1)
-                i = i + 1
-                if i > 5:
+            while not self.data_count():
+                if i >= 10:
                     break
-        sql = "SELECT * FROM content LIMIT {}, {}".format((page_num-1)*page_size, page_size)
-        self.cursor.execute(sql)
-        return self.cursor.fetchall()
+                i = i + 1
+                time.sleep(1)
+
+        # 从数据库获取数据
+        data = Content.objects.values('title', 'authors', 'brief', 'source', 'website')
+        paginator = Paginator(data, page_size)
+
+        try:
+            literature = paginator.page(page_num)
+        except PageNotAnInteger:
+            literature = paginator.page(1)
+        except EmptyPage:
+            literature = paginator.page(paginator.num_pages)
+
+        literature = list(literature)
+
+        for index, item in enumerate(literature):
+            sources = item['source'].split('||')
+            websites = item['website'].split('||')
+            literature[index]['sources'] = [{'link': link, 'name': name} for (link, name) in zip(sources, websites)]
+        return literature, self.data_count()
 
     def is_first_request(self):
-        custom_settings = get_config('wf')
-        if custom_settings['start_urls']['args'][0] == self.kw:
-            return False
-        else:
-            return True
+        custom_settings = get_config(self.source[0])
 
-    def has_data(self):
-        sql = "SELECT * FROM content"
-        self.cursor.execute(sql)
-        return len(self.cursor.fetchall())
+        return custom_settings['start_urls']['args'][0] != self.kw
 
-    def __del__(self):
-        self.cursor.close()
-        self.conn.close()
+    @staticmethod
+    def data_count():
+        return Content.objects.all().count()
 
 
 if __name__ == '__main__':
     now = time.time()
-    run('word2vec')
+    run('计算机')
     print(time.time()-now)

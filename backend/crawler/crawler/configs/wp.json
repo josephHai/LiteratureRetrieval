@@ -1,0 +1,74 @@
+{
+ "spider": "literature",
+ "name": "wp",
+ "website": "维普",
+ "type": "文献",
+ "index": "http://qikan.cqvip.com",
+ "settings": {},
+ "start_urls": {
+  "type": "post",
+  "method": "wp",
+  "value": "http://qikan.cqvip.com/Search/SearchList",
+  "headers": {
+   "Host": "qikan.cqvip.com",
+   "Origin": "http://qikan.cqvip.com",
+   "Referer": "http://qikan.cqvip.com/Qikan/Search/Index?from=index",
+   "USER-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36",
+   "X-Requested-With": "XMLHttpRequest"
+  },
+  "args": [
+   ""
+  ]
+ },
+ "allowed_domains": [
+  "qikan.cqvip.com"
+ ],
+ "rules": "wf",
+ "item": {
+  "class": "LiteratureItem",
+  "loader": "WPLoader",
+  "box_path": "//div[@id=\"remark\"]//dl",
+  "attrs": {
+   "title": [
+    {
+     "method": "xpath",
+     "args": [
+      "./dt/a//text()"
+     ]
+    }
+   ],
+   "authors": [
+    {
+     "method": "xpath",
+     "args": [
+      ".//span[@class=\"author\"]//a/@title"
+     ]
+    }
+   ],
+   "brief": [
+    {
+     "method": "xpath",
+     "args": [
+      ".//span[@class=\"abstract\"]/span//text()"
+     ]
+    }
+   ],
+   "source": [
+    {
+     "method": "xpath",
+     "args": [
+      "./dt/a//@href"
+     ]
+    }
+   ],
+   "website": [
+    {
+     "method": "value",
+     "args": [
+      "维普"
+     ]
+    }
+   ]
+  }
+ }
+}

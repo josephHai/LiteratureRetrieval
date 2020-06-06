@@ -38,7 +38,6 @@ USER_AGENT_LIST = [
     "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/535.24 (KHTML, like Gecko) Chrome/19.0.1055.1 Safari/535.24"
 ]
 
-
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = random.choice(USER_AGENT_LIST)
 # Obey robots.txt rules
@@ -50,46 +49,45 @@ CONCURRENT_REQUESTS = 100
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 0
+DOWNLOAD_DELAY = 0.5
 # The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
+# CONCURRENT_REQUESTS_PER_DOMAIN = 16
+# CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
 
 # Disable Telnet Console (enabled by default)
-#TELNETCONSOLE_ENABLED = False
+# TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
-#DEFAULT_REQUEST_HEADERS = {
+# DEFAULT_REQUEST_HEADERS = {
 #   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 #   'Accept-Language': 'en',
-#}
+# }
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
+# SPIDER_MIDDLEWARES = {
 #    'crawler.middlewares.CrawlerSpiderMiddleware': 543,
-#}
+# }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
-    'crawler.middlewares.CrawlerDownloaderMiddleware': 543,
+    # 'crawler.middlewares.HeadersMiddleware': 543,
 }
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
-#EXTENSIONS = {
+# EXTENSIONS = {
 #    'scrapy.extensions.telnet.TelnetConsole': None,
-#}
+# }
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'crawler.pipelines.CrawlerPipeline': 300,
-    'crawler.pipelines.MySqlPipeline':300,
+    'crawler.pipelines.MySqlPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -107,20 +105,22 @@ AUTOTHROTTLE_DEBUG = False
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
-#HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = 'httpcache'
-#HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+# HTTPCACHE_ENABLED = True
+# HTTPCACHE_EXPIRATION_SECS = 0
+# HTTPCACHE_DIR = 'httpcache'
+# HTTPCACHE_IGNORE_HTTP_CODES = []
+# HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # log configuration
 to_day = datetime.datetime.now()
 
-LOG_LEVEL = 'INFO'
-LOG_FILE = 'log/{}_{}_{}.log'.format(to_day.year, to_day.month, to_day.day)
+# LOG_LEVEL = 'INFO'
+# LOG_FILE = 'log/{}_{}_{}.log'.format(to_day.year, to_day.month, to_day.day)
 
 # Crawler strategy
 MAX_ITEM_NUM = 700  # 最大爬取数量
+MAX_PAGE = 1  # 最大爬取页数
+MIN_SQL_NUM = 50  # 每次插入数据库的最小数据条数
+MAX_USER_WAIT = 10  # 允许用户等待的最大时长，单位：秒
 RETRY_ENABLED = False  # 禁止重试
-DOWNLOAD_TIMEOUT = 15  # 下载超时
 HTTPERROR_ALLOWED_CODES = [403]

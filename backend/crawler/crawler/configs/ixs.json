@@ -9,11 +9,58 @@
   "type": "dynamic",
   "method": "ixs",
   "args": [
-   "word2vec"
+   ""
   ]
  },
  "allowed_domains": [
   "www.ixueshu.com/"
  ],
- "rules": "ixs"
+ "rules": "ixs",
+ "item": {
+  "class": "LiteratureItem",
+  "loader": "IXSLoader",
+  "box_path": "//div[@class=\"cont-bd\"]/ul[contains(@class, \"doc-list\")]//li",
+  "attrs": {
+   "title": [
+    {
+     "method": "xpath",
+     "args": [
+      ".//h3/a//text()"
+     ]
+    }
+   ],
+   "authors": [
+    {
+     "method": "xpath",
+     "args": [
+      ".//div[@class=\"field\"]//span[2]//text()"
+     ]
+    }
+   ],
+   "brief": [
+    {
+     "method": "xpath",
+     "args": [
+      ".//div[@class=\"intro\"]//text()"
+     ]
+    }
+   ],
+   "source": [
+    {
+     "method": "xpath",
+     "args": [
+      ".//h3/a/@href"
+     ]
+    }
+   ],
+   "website": [
+    {
+     "method": "value",
+     "args": [
+      "爱学术"
+     ]
+    }
+   ]
+  }
+ }
 }
