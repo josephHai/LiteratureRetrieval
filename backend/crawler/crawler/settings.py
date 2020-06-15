@@ -114,8 +114,8 @@ AUTOTHROTTLE_DEBUG = False
 # log configuration
 to_day = datetime.datetime.now()
 
-# LOG_LEVEL = 'INFO'
-# LOG_FILE = 'log/{}_{}_{}.log'.format(to_day.year, to_day.month, to_day.day)
+LOG_LEVEL = 'INFO'
+LOG_FILE = 'log/{}_{}_{}.log'.format(to_day.year, to_day.month, to_day.day)
 
 # Crawler strategy
 MAX_ITEM_NUM = 700  # 最大爬取数量
