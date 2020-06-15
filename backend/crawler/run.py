@@ -5,6 +5,7 @@ from scrapy.utils.project import get_project_settings
 from scrapy.crawler import CrawlerProcess
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from celery import shared_task
+from django.core.cache import cache
 
 from backend.crawler.crawler.utils import get_config, update_config
 from ..models import Content
@@ -44,7 +45,7 @@ class Worker:
             # 启动爬虫
             spider = run.delay(self.kw, self.source)
 
-            print('启动完成,用时{}'.format(time.time()-now))
+            print('启动完成,用时{}'.format(time.time() - now))
             i = 0
             while not self.data_count():
                 if i >= 10:
@@ -68,13 +69,19 @@ class Worker:
         for index, item in enumerate(literature):
             sources = item['source'].split('||')
             websites = item['website'].split('||')
+            links = list(set(sources))
+            links.sort(key=sources.index)
+            names = list(set(websites))
+            names.sort(key=websites.index)
             literature[index]['sources'] = [{'link': link, 'name': name} for (link, name) in zip(sources, websites)]
         return literature, self.data_count()
 
     def is_first_request(self):
-        custom_settings = get_config(self.source[0])
-
-        return custom_settings['start_urls']['args'][0] != self.kw
+        if cache.has_key('kw') and cache.get('kw') == self.kw:
+            return False
+        else:
+            cache.set('kw', self.kw)
+            return True
 
     @staticmethod
     def data_count():
@@ -83,5 +90,5 @@ class Worker:
 
 if __name__ == '__main__':
     now = time.time()
-    run('计算机')
-    print(time.time()-now)
+    run('计算机', ['wp'])
+    print(time.time() - now)

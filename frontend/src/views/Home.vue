@@ -17,24 +17,18 @@ import Retrieval from "@/components/Retrieval.vue";
 
 export default {
   name: "Home",
-  data() {
-    return {
-      inputText: ""
-    };
-  },
   methods: {
     change(data) {
-      this.inputText = data;
       this.$router.push({
         path: "/result",
         query: {
-          kw: this.inputText
-        }
+          kw: data,
+        },
       });
-    }
+    },
   },
   components: {
-    Retrieval
-  }
+    Retrieval,
+  },
 };
 </script>

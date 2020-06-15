@@ -2,7 +2,7 @@
   <div class="box">
     <div class="item" :key="index" v-for="(item, index) in resultList">
       <div class="title">
-        <a style="text-decoration: none" :href="item.link">{{ item.title }}</a>
+        <a style="text-decoration: none;" :href="item.link">{{ item.title }}</a>
       </div>
       <div class="authors">
         {{ item.authors }}
@@ -27,14 +27,14 @@ export default {
   name: "MainList",
   data() {
     return {
-      resultList: []
+      resultList: [],
     };
   },
   methods: {
     initList(arr) {
       this.resultList = arr;
-    }
-  }
+    },
+  },
 };
 </script>
 

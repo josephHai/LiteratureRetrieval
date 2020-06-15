@@ -1,7 +1,7 @@
 <template>
   <div class="retrieval">
     <el-row>
-      <el-col :span="24">
+      <el-col :span="20">
         <el-input v-model="inputText" prefix-icon="el-icon-search">
           <el-tooltip
             slot="append"
@@ -16,6 +16,11 @@
             ></el-button>
           </el-tooltip>
         </el-input>
+      </el-col>
+      <el-col :span="4">
+        <el-button v-show="sourceBtnV" type="text" @click="sourceBtnClick"
+          >检索来源</el-button
+        >
       </el-col>
     </el-row>
     <el-dialog :fullscreen="true" :visible.sync="speechDialog">
@@ -37,10 +42,26 @@
         </el-col>
       </el-row>
     </el-dialog>
+    <el-dialog :visible.sync="sourceDialog" title="文献检索来源" width="30%">
+      <div style="margin: 15px 0;"></div>
+      <el-checkbox-group v-model="checkedSources">
+        <el-checkbox
+          v-for="source in sources"
+          :label="source.en"
+          :key="source.en"
+          >{{ source.name }}</el-checkbox
+        >
+      </el-checkbox-group>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="sourceDialog = false">取 消</el-button>
+        <el-button type="primary" @click="sourceBtnConfirm">确 认</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { getSources } from "../api/literature";
 export default {
   name: "Retrieval",
   props: {
@@ -48,24 +69,47 @@ export default {
       type: String,
       default() {
         return "";
-      }
-    }
+      },
+    },
+    sourceBtnVisible: {
+      type: Boolean,
+      default() {
+        return true;
+      },
+    },
   },
   data() {
     return {
       websocket: null,
       inputText: this.$props.value,
+      sourceBtnV: this.$props.sourceBtnVisible,
       speechDialog: false,
-      speechText: "请输入语音"
+      speechText: "请输入语音",
+      sourceDialog: false,
+      sources: [],
+      checkedSources: ["wf"],
     };
   },
   methods: {
+    sourceBtnClick() {
+      this.sourceDialog = true;
+      this.sources.length === 0 ? this.getSources() : "";
+    },
+    sourceBtnConfirm() {
+      this.$session.set("sources", JSON.stringify(this.checkedSources));
+      this.sourceDialog = false;
+    },
+    getSources() {
+      getSources().then((response) => {
+        this.sources = response.data;
+      });
+    },
     speechCapture() {
       this.initWebSocket();
     },
     initWebSocket() {
       // 初始化websocket
-      const wsUri = "ws://192.168.1.6:8000/ws/speech/";
+      const wsUri = "ws://s.c/ws/speech/";
       this.websocket = new WebSocket(wsUri);
       this.websocket.onmessage = this.websocketOnMessage;
       this.websocket.onopen = this.websocketOnOpen;
@@ -90,6 +134,7 @@ export default {
       if (status === 2) {
         this.websocket.close();
         this.$emit("inputChange", response);
+        this.speechDialog = false;
       } else if (status === 0) {
         this.speechDialog = true;
       }
@@ -101,8 +146,8 @@ export default {
     websocketClose(e) {
       // 关闭
       console.log("断开连接", e);
-    }
-  }
+    },
+  },
 };
 </script>
 
