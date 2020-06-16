@@ -43,7 +43,6 @@ class LiteratureSpider(CrawlSpider):
 
     def parse_item(self, response):
         item = self.config.get('item')
-        print(response.text)
 
         if item:
             results = response.xpath(item.get('box_path'))

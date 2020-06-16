@@ -11,10 +11,9 @@ def search(request):
     keywords = request.GET.get('kw', '')
     page = request.GET.get('page', 1)
     limit = request.GET.get('limit', 10)
-    source = request.GET.get('sources', '["wp", "wf", "ixs"]')
+    source = request.GET.get('sources', '["wp"]')
     source = json.loads(source)
 
-    print('启动worker')
     worker = Worker(keywords, source)
     literature, total = worker.get_data(int(page), limit)
     response = json.dumps({'code': 200, 'data': {'total': total, 'items': literature}}, ensure_ascii=False)
