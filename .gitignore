@@ -144,3 +144,5 @@ cython_debug/
 LiteratureRetrieval/settings.py
 backend/migrations/
 .idea/
+node_modules/
+templates/
