@@ -23,7 +23,11 @@
         >
       </el-col>
     </el-row>
-    <el-dialog :fullscreen="true" :visible.sync="speechDialog">
+    <el-dialog
+      :fullscreen="true"
+      :visible.sync="speechDialog"
+      @close="speechClose"
+    >
       <el-row
         type="flex"
         justify="center"
@@ -107,6 +111,11 @@ export default {
     speechCapture() {
       this.initWebSocket();
     },
+    speechClose() {
+      if (this.speechText) {
+        this.inputText = this.speechText;
+      }
+    },
     initWebSocket() {
       // 初始化websocket
       const wsUri = "ws://s.c/ws/speech/";
@@ -130,7 +139,7 @@ export default {
       const response = JSON.parse(e.data).message;
       const status = JSON.parse(e.data).status;
       this.speechText = response;
-      console.log(status === 0);
+
       if (status === 2) {
         this.websocket.close();
         this.$emit("inputChange", response);
@@ -145,7 +154,7 @@ export default {
     },
     websocketClose(e) {
       // 关闭
-      console.log("断开连接", e);
+      window.console.log("断开连接", e);
     },
   },
 };

@@ -6,6 +6,7 @@
           :value="listQuery.kw"
           @inputChange="change($event)"
           :source-btn-visible="false"
+          style="margin: 20px 0 20px 0;"
         />
       </el-col>
     </el-row>
@@ -49,9 +50,19 @@ export default {
     this.listQuery.kw = this.$route.query.kw;
     this.getList();
   },
+  watch: {
+    $route() {
+      this.getList();
+    },
+  },
   methods: {
     change(data) {
-      this.listQuery.kw = data.value;
+      if (data) {
+        this.$router.push({
+          query: { kw: data },
+        });
+        this.listQuery.kw = data;
+      }
     },
     getList() {
       this.listQuery.sources = this.$session.get("sources");

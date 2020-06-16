@@ -19,12 +19,14 @@ export default {
   name: "Home",
   methods: {
     change(data) {
-      this.$router.push({
-        path: "/result",
-        query: {
-          kw: data,
-        },
-      });
+      if (data) {
+        this.$router.push({
+          path: "/result",
+          query: {
+            kw: data,
+          },
+        });
+      }
     },
   },
   components: {
