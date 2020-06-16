@@ -11,7 +11,7 @@ def search(request):
     keywords = request.GET.get('kw', '')
     page = request.GET.get('page', 1)
     limit = request.GET.get('limit', 10)
-    source = request.GET.get('sources', '["wp"]')
+    source = request.GET.get('sources', '["wp", "wf", "ixs"]')
     source = json.loads(source)
 
     worker = Worker(keywords, source)
