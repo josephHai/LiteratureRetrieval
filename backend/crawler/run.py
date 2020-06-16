@@ -1,14 +1,20 @@
-import os
 import time
+import logging
 
 from scrapy.utils.project import get_project_settings
 from scrapy.crawler import CrawlerProcess
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from celery import shared_task
 from django.core.cache import cache
+from pyhanlp import *
+from jpype import *
+from nltk.corpus import stopwords
 
 from backend.crawler.crawler.utils import get_config, update_config
 from ..models import Content
+
+
+logger = logging.getLogger(__name__)
 
 
 @shared_task()
@@ -32,20 +38,23 @@ def run(kw, source):
 
 class Worker:
     def __init__(self, kw, source):
-        self.kw = kw
         self.source = source
+        self.kw = self.handle_kw(kw)
 
     def get_data(self, page_num, page_size):
-        print('判断是否为第一次请求')
+        if self.kw == '':
+            return [], 0
+        logger.info('当前关键词为: {}'.format(self.kw))
+        logger.info('判断是否为第一次请求')
         if self.is_first_request():
             Content.objects.all().delete()
 
-            print('启动爬虫')
-            now = time.time()
+            logger.info('启动爬虫')
+            current = time.time()
             # 启动爬虫
-            spider = run.delay(self.kw, self.source)
+            run.delay(self.kw, self.source)
 
-            print('启动完成,用时{}'.format(time.time() - now))
+            logger.info('启动完成,用时{}'.format(time.time() - current))
             i = 0
             while not self.data_count():
                 if i >= 10:
@@ -82,6 +91,21 @@ class Worker:
         else:
             cache.set('kw', self.kw)
             return True
+
+    @staticmethod
+    def handle_kw(kw, top=10):
+        s1 = []
+        allow_pos = ['g', 'gb', 'gbc', 'gc', 'gg', 'gi', 'gm', 'gp', 'n', 'nb', 'nba', 'nbc', 'nbp', 'nf', 'ng', 'nh',
+                     'nhd', 'nhm', 'ni', 'nic', 'nis', 'nit', 'nl', 'nm', 'nmc', 'nn', 'nnd', 'nnt', 'nr', 'nr1', 'nr2',
+                     'nrf', 'nrj', 'ns', 'nsf', 'nt', 'ntc', 'ntcb', 'ntcf', 'ntch', 'nth', 'nto', 'nts', 'ntu', 'nx',
+                     'nz']
+        stop_words = stopwords.words('chinese')
+        IndexTokenizer = JClass('com.hankcs.hanlp.tokenizer.IndexTokenizer')
+        for term in IndexTokenizer.segment(kw):
+            word, pos = term.word, term.nature
+            if word not in stop_words and pos.__str__() in allow_pos:
+                s1.append(word)
+        return ' '.join(s1)
 
     @staticmethod
     def data_count():
