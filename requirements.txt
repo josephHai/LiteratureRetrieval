@@ -1,8 +1,6 @@
 pyhanlp==0.1.64
-requests==2.23.0
 channels==2.4.0
 Django==3.0.2
-lxml==4.5.0
 pyaudio==0.2.11
 
 ws4py~=0.5.1
@@ -11,3 +9,4 @@ scipy~=1.4.1
 scrapy~=1.8.0
 pymysql~=0.9.3
 celery~=4.4.2
+nltk~=3.4.5
