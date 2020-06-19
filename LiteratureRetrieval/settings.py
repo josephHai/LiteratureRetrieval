@@ -78,10 +78,31 @@ WSGI_APPLICATION = 'LiteratureRetrieval.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django',
+        'USER': 'django',
+        'PASSWORD': '123456',
+        'HOST': '127.0.0.1',
+        'PORT': 3306
+    }
+}
+
+# caches configuration base on redis
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+        }
     }
 }
 
@@ -134,3 +155,14 @@ ASGI_APPLICATION = 'LiteratureRetrieval.routing.application'
 WEBSOCKET_ACCEPT_ALL = True
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+# celery config
+CELERY_BROKER_URL = 'redis://127.0.0.1/0'  # Broker配置，使用Redis作为消息中间件
+
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1/0'  # BACKEND配置，这里使用redis
+
+CELERY_RESULT_SERIALIZER = 'json'  # 结果序列化方案
+
+CELERY_FORCE_EXECV = True
+
+CELERY_TASK_TIME_LIMIT = 40

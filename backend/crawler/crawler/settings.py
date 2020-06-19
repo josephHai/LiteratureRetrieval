@@ -119,7 +119,7 @@ LOG_FILE = 'log/{}_{}_{}.log'.format(to_day.year, to_day.month, to_day.day)
 
 # Crawler strategy
 MAX_ITEM_NUM = 700  # 最大爬取数量
-MAX_PAGE = 1  # 最大爬取页数
+MAX_PAGE = 4  # 最大爬取页数
 MIN_SQL_NUM = 50  # 每次插入数据库的最小数据条数
 MAX_USER_WAIT = 10  # 允许用户等待的最大时长，单位：秒
 RETRY_ENABLED = False  # 禁止重试
