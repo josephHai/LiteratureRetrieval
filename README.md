@@ -4,7 +4,7 @@
 基于智能语音芯片的文献自动检索系统
 
 ## 系统介绍
-        本系统运行在Respeaker Core v2.0语音开发板上的文献自动检索系统，后端采用了Django框架，前端基于Vue以及Element-UI，爬虫的实现则采用了Scrapy框架。
+本系统运行在Respeaker Core v2.0语音开发板上的文献自动检索系统，后端采用了Django框架，前端基于Vue以及Element-UI，爬虫的实现则采用了Scrapy框架。
 
 ## 环境配置及系统启动
     1. cd LiteratureRetrieval
