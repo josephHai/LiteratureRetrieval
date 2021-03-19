@@ -1,6 +1,6 @@
 pyhanlp==0.1.64
 channels==2.4.0
-Django==3.0.2
+Django==3.1.6
 pyaudio==0.2.11
 
 ws4py~=0.5.1
